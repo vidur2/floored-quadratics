@@ -2,22 +2,32 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
+function sleep(delay) {
+  var start = new Date().getTime();
+  while (new Date().getTime() < start + delay);
+}
+
 export default function Home() {
   const sendGraph = async(event) => {
-    const interval = event.target.interval.value;
-    const endRange = event.target.endRange.value;
-    const email = event.target.email.value;
+    event.preventDefault();
+    const interval = document.getElementById("Interval").value;
+    const endRange = document.getElementById("endRange").value
+    const email = document.getElementById("email").value;
+
+    console.log(interval)
 
     const body = new FormData();
 
-    body.append("endRange", endRange);
-    body.append("interval", interval);
+    body.append("endRange", parseFloat(endRange));
+    body.append("interval", parseFloat(interval));
     body.append("email", email);
 
-    await fetch(`https://usercd38747477a7ff2.app.vtxhub.com/get_plot`, {
+    fetch(`https://usercd38747477a7ff2.app.vtxhub.com/get_plot`, {
       method: "POST",
       body
     })
+
+    // window.location.reload()
   }
 
   return (
@@ -31,8 +41,12 @@ export default function Home() {
       <main className={styles.main}>
         <form onSubmit={sendGraph}>
           Interval: <input type="text" id="Interval"></input>
+          <p></p>
           End range: <input type="text" id="endRange"></input>
+          <p></p>
           Email: <input type="text" id="email"></input>
+          <p></p>
+          <button type="submit">Submit</button>
         </form>
       </main>
 
